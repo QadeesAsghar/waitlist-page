@@ -201,7 +201,7 @@ waitlistRouter.post("/", async (req, res) => {
     }
 
     ticket.burn();
-    return res.status(201).json({ ok: true });
+    return res.status(201).json({ ok: true, status: "submitted" });
   } catch (err) {
     /*
      * 11000 is the unique index on emailKey doing its job. Answering exactly as
@@ -210,7 +210,7 @@ waitlistRouter.post("/", async (req, res) => {
      */
     if (err?.code === 11000) {
       ticket.burn();
-      return res.json({ ok: true });
+      return res.json({ ok: true, status: "already_joined" });
     }
 
     console.error("[waitlist] insert failed:", err.message);

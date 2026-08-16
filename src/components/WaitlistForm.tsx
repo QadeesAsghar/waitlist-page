@@ -29,6 +29,9 @@ export function WaitlistForm({ className }: { className?: string }) {
   const [companyWebsite, setCompanyWebsite] = useState(""); // Honeypot 1
   const [fax, setFax] = useState(""); // Honeypot 2
   const [submitted, setSubmitted] = useState("");
+  const [submissionState, setSubmissionState] = useState<"submitted" | "already_joined">(
+    "submitted"
+  );
   const [status, setStatus] = useState<"idle" | "loading" | "done">("idle");
   const [error, setError] = useState<string | null>(null);
   const [focused, setFocused] = useState(false);
@@ -162,6 +165,7 @@ export function WaitlistForm({ className }: { className?: string }) {
       }
 
       setSubmitted(value);
+      setSubmissionState(data?.status === "already_joined" ? "already_joined" : "submitted");
       setStatus("done");
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Something went wrong. Please retry.";
@@ -415,12 +419,20 @@ export function WaitlistForm({ className }: { className?: string }) {
               <Check className="h-6 w-6 text-mint-400" />
             </motion.span>
             <h3 className="text-lg font-semibold tracking-tight sm:text-xl">
-              You're on the list
+              {submissionState === "already_joined" ? "You’re already on the list" : "You're on the list"}
             </h3>
             <p className="mt-2 max-w-sm text-sm text-white/55">
-              We'll email{" "}
-              <span className="font-medium break-all text-white">{submitted}</span>{" "}
-              the moment your workspace is ready.
+              {submissionState === "already_joined" ? (
+                <>
+                  <span className="font-medium break-all text-white">{submitted}</span> is already on our
+                  waitlist. You’re all set—we’ll reach out as soon as your workspace is ready.
+                </>
+              ) : (
+                <>
+                  We'll email <span className="font-medium break-all text-white">{submitted}</span> the moment
+                  your workspace is ready.
+                </>
+              )}
             </p>
           </motion.div>
         )}
