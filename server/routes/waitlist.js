@@ -194,9 +194,11 @@ waitlistRouter.post("/", async (req, res) => {
     });
 
     // Dispatch welcome email via configured SMTP (Gmail/Outlook) or Resend
-    sendWelcomeEmail(parsed.email).catch((err) => {
+    try {
+      await sendWelcomeEmail(parsed.email);
+    } catch (err) {
       console.error("[waitlist] welcome email dispatch error:", err.message || err);
-    });
+    }
 
     ticket.burn();
     return res.status(201).json({ ok: true });

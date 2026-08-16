@@ -1,28 +1,36 @@
 import nodemailer from "nodemailer";
 import { Resend } from "resend";
 
-let mailTransporter = null;
-if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
-  mailTransporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.GMAIL_USER.trim(),
-      pass: process.env.GMAIL_APP_PASSWORD.replace(/\s+/g, ""),
-    },
-  });
-} else if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-  mailTransporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST.trim(),
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: process.env.SMTP_SECURE === "true",
-    auth: {
-      user: process.env.SMTP_USER.trim(),
-      pass: process.env.SMTP_PASS.trim(),
-    },
-  });
+function getTransporter() {
+  const user = process.env.GMAIL_USER?.trim();
+  const pass = process.env.GMAIL_APP_PASSWORD?.replace(/\s+/g, "");
+
+  if (user && pass) {
+    return nodemailer.createTransport({
+      service: "gmail",
+      auth: { user, pass },
+    });
+  }
+
+  const host = process.env.SMTP_HOST?.trim();
+  const smtpUser = process.env.SMTP_USER?.trim();
+  const smtpPass = process.env.SMTP_PASS?.trim();
+
+  if (host && smtpUser && smtpPass) {
+    return nodemailer.createTransport({
+      host,
+      port: Number(process.env.SMTP_PORT) || 587,
+      secure: process.env.SMTP_SECURE === "true",
+      auth: { user: smtpUser, pass: smtpPass },
+    });
+  }
+
+  return null;
 }
 
-const resendClient = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+function getResendClient() {
+  return process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+}
 
 export async function sendWelcomeEmail(toEmail) {
   const htmlContent = `
@@ -42,17 +50,19 @@ export async function sendWelcomeEmail(toEmail) {
     </div>
   `;
 
+  const transporter = getTransporter();
+
   // 1. Prioritize Gmail / SMTP if configured
-  if (mailTransporter) {
+  if (transporter) {
     try {
       const fromAddress = process.env.EMAIL_FROM || `Slang <${process.env.GMAIL_USER || process.env.SMTP_USER}>`;
-      const info = await mailTransporter.sendMail({
+      const info = await transporter.sendMail({
         from: fromAddress,
         to: toEmail,
         subject: "You're on the list - Welcome to Slang",
         html: htmlContent,
       });
-      console.log("[email] welcome email sent via Gmail/SMTP:", info.messageId);
+      console.log("[email] welcome email sent via Gmail/SMTP to:", toEmail, "id:", info.messageId);
       return { ok: true, provider: "smtp", id: info.messageId };
     } catch (err) {
       console.error("[email] failed to send via Gmail/SMTP:", err.message);
@@ -60,11 +70,13 @@ export async function sendWelcomeEmail(toEmail) {
     }
   }
 
+  const resend = getResendClient();
+
   // 2. Fallback to Resend if configured
-  if (resendClient) {
+  if (resend) {
     try {
       const fromEmail = process.env.RESEND_FROM || "Slang <onboarding@resend.dev>";
-      const result = await resendClient.emails.send({
+      const result = await resend.emails.send({
         from: fromEmail,
         to: toEmail,
         subject: "You're on the list - Welcome to Slang",
@@ -74,7 +86,7 @@ export async function sendWelcomeEmail(toEmail) {
         console.error("[email] Resend delivery error:", result.error);
         return { ok: false, error: result.error };
       }
-      console.log("[email] welcome email sent via Resend:", result.data?.id);
+      console.log("[email] welcome email sent via Resend to:", toEmail, "id:", result.data?.id);
       return { ok: true, provider: "resend", id: result.data?.id };
     } catch (err) {
       console.error("[email] failed to send via Resend:", err.message);
