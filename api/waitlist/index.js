@@ -117,6 +117,34 @@ export default async function handler(req, res) {
       timeZone: trim(body.timeZone, 64),
     });
 
+    // Send Welcome Email via Resend
+    if (process.env.RESEND_API_KEY) {
+      import("resend").then(({ Resend }) => {
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        resend.emails.send({
+          from: "Slang <hello@updates.slang.com>",
+          to: parsed.email,
+          subject: "You're on the list.",
+          html: `
+            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #18181b;">
+              <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 24px; color: #09090b;">Welcome to the waitlist.</h2>
+              <p style="font-size: 16px; line-height: 24px; margin-bottom: 24px; color: #3f3f46;">
+                We've reserved your spot. We're currently rolling out access to a limited number of teams to ensure a flawless experience.
+              </p>
+              <p style="font-size: 16px; line-height: 24px; margin-bottom: 40px; color: #3f3f46;">
+                We'll notify you the moment your workspace is ready to be provisioned.
+              </p>
+              <div style="border-top: 1px solid #e4e4e7; padding-top: 32px;">
+                <p style="font-size: 14px; color: #71717a; margin: 0;">
+                  - The Slang Team
+                </p>
+              </div>
+            </div>
+          `,
+        }).catch(err => console.error("[resend] failed to send welcome email:", err));
+      });
+    }
+
     ticket.burn();
     return res.status(201).json({ ok: true });
   } catch (err) {
