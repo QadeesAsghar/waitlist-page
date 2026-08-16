@@ -126,11 +126,11 @@ export default async function handler(req, res) {
     }
 
     ticket.burn();
-    return res.status(201).json({ ok: true });
+    return res.status(201).json({ ok: true, status: "submitted" });
   } catch (err) {
     if (err?.code === 11000) {
       ticket.burn();
-      return res.status(200).json({ ok: true });
+      return res.status(200).json({ ok: true, status: "already_joined" });
     }
 
     console.error("[vercel-mongo] insert failed:", err.message);
