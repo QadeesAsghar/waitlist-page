@@ -92,9 +92,8 @@ export function Hero() {
           className="mt-9 flex flex-col items-center justify-center gap-3 sm:mt-11 sm:flex-row sm:gap-4"
         >
           <Avatars />
-          <p className="text-xs tracking-wide text-white/40">
-            Join <span className="font-medium text-white/75">4,200+</span> teams
-            already waiting
+          <p className="text-xs tracking-wide text-white/45">
+            <span className="font-medium text-white/85">45+ enterprise teams</span> & design partners piloting Batch 01
           </p>
         </motion.div>
       </div>

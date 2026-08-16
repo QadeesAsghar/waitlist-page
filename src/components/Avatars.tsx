@@ -1,7 +1,3 @@
-/*
- * Graduated violet graphite rather than one gradient per hue - five saturated
- * multi-colour circles is the thing that made the row look generated.
- */
 const PEOPLE = [
   { id: "Felix", bg: "#e4e4e7" },
   { id: "Aneka", bg: "#d4d4d8" },
@@ -16,12 +12,12 @@ export function Avatars({ className = "" }: { className?: string }) {
       {PEOPLE.map((p) => (
         <div
           key={p.id}
-          className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full ring-2 ring-ink-900 sm:h-9 sm:w-9"
+          className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full border border-white/15 ring-2 ring-ink-950 sm:h-9 sm:w-9 shadow-sm"
           style={{ backgroundColor: p.bg }}
         >
           <img
             src={`https://api.dicebear.com/9.x/micah/svg?seed=${p.id}&backgroundColor=transparent`}
-            alt="Avatar"
+            alt={p.id}
             className="h-full w-full object-cover"
             loading="lazy"
           />
@@ -30,3 +26,4 @@ export function Avatars({ className = "" }: { className?: string }) {
     </div>
   );
 }
+
