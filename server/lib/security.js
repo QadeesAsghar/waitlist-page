@@ -13,7 +13,7 @@ import { resolveMx } from "node:dns/promises";
 const IS_PROD = process.env.NODE_ENV === "production";
 
 /**
- * HMAC key for the submit tokens. Required in production — an ephemeral key
+ * HMAC key for the submit tokens. Required in production - an ephemeral key
  * would invalidate every in-flight token on restart, and across more than one
  * instance no token would ever verify.
  */
@@ -27,7 +27,7 @@ function loadSecret() {
     );
   }
   console.warn(
-    "[security] WAITLIST_SECRET unset or too short — using an ephemeral dev key.\n" +
+    "[security] WAITLIST_SECRET unset or too short - using an ephemeral dev key.\n" +
       "           Tokens will stop verifying on restart. Generate one with:\n" +
       "           node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\""
   );
@@ -184,7 +184,7 @@ export function verifyToken(token, ipHash) {
 /**
  * The client has to find a nonce where sha256(`challenge:nonce`) starts with
  * `difficulty` hex zeros. Verification is a single hash; solving averages
- * 16^difficulty. That asymmetry is the whole point — it costs a real visitor
+ * 16^difficulty. That asymmetry is the whole point - it costs a real visitor
  * a few hundred milliseconds while they type, and costs a scripted flood
  * linearly per attempt.
  */
@@ -249,7 +249,7 @@ export function createLimiter({ limit, windowMs, name }) {
    ═══════════════════════════════════════════════════════════════════ */
 
 /*
- * Throwaway-inbox providers. Not exhaustive and not meant to be — it filters
+ * Throwaway-inbox providers. Not exhaustive and not meant to be - it filters
  * the lazy bulk of junk signups without turning into a list nobody maintains.
  */
 const DISPOSABLE_DOMAINS = new Set([
@@ -308,7 +308,7 @@ const EMAIL_RE =
 
 /**
  * Dedupe key. `foo.bar+beta@gmail.com` and `foobar@gmail.com` are one inbox,
- * so the unique index has to see one value — but the address the user actually
+ * so the unique index has to see one value - but the address the user actually
  * typed is what gets stored and mailed.
  */
 function dedupeKey(local, domain) {
@@ -344,7 +344,7 @@ export function normalizeEmail(raw) {
   return { ok: true, email, domain, emailKey: dedupeKey(local, domain) };
 }
 
-/** Cheap memo — a signup wave from one company shouldn't be one lookup each. */
+/** Cheap memo - a signup wave from one company shouldn't be one lookup each. */
 const mxCache = new Map();
 
 /**

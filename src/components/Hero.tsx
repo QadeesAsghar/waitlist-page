@@ -40,7 +40,7 @@ export function Hero() {
           </span>
         </motion.div>
 
-        {/* Headline — fluid so the longest phrase still fits at 320px */}
+        {/* Headline - fluid so the longest phrase still fits at 320px */}
         <h1 className="text-[clamp(1.95rem,8.4vw,4.5rem)] leading-[1.06] font-bold tracking-[-0.035em] text-balance">
           <TextGenerateEffect lines={["Support, engineered"]} delay={0.15} />
           <motion.span
@@ -64,7 +64,7 @@ export function Hero() {
           transition={{ duration: 0.9, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
           className="mx-auto mt-5 max-w-xl text-[clamp(0.97rem,2.6vw,1.13rem)] leading-relaxed font-normal text-white/55 sm:mt-7"
         >
-          Live chat, ticketing, analytics and automation in one silent,
+          Live chat, analytics and automation in one silent,
           keyboard-first command center your customers never wait on.
         </motion.p>
 

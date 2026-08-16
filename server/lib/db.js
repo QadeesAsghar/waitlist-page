@@ -38,7 +38,7 @@ export function getClient() {
     });
 
     connecting = client.connect().catch((err) => {
-      // Don't cache a failed attempt — the next request should try again
+      // Don't cache a failed attempt - the next request should try again
       connecting = null;
       throw err;
     });

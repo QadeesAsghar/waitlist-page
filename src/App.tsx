@@ -54,7 +54,7 @@ export default function App() {
             initial="rest"
             whileHover="hover"
             animate="rest"
-            className="group relative inline-flex items-center rounded-xl px-3 py-1.5 transition-all duration-300"
+            className="group relative inline-flex items-center gap-2.5 rounded-xl px-3 py-1.5 transition-all duration-300"
           >
             {/* Ambient subtle back-glow on hover */}
             <motion.div
@@ -68,6 +68,15 @@ export default function App() {
               }}
               className="absolute inset-0 -z-10 rounded-xl bg-white/5 blur-xl pointer-events-none"
             />
+
+            {/* Circular brand logo */}
+            <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-white/15 bg-white/[0.06] p-1 shadow-sm backdrop-blur-md transition-transform duration-300 group-hover:scale-105">
+              <img
+                src="/favicon.png"
+                alt="Slang logo"
+                className="h-full w-full object-contain rounded-full"
+              />
+            </div>
 
             {/* Premium Rolling Slot Machine typography */}
             <div className="flex items-center">

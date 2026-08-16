@@ -15,7 +15,7 @@
 }
 
 @theme {
-  /* Sora ships 400/500/600/700 only — nothing on the page should ask for a
+  /* Sora ships 400/500/600/700 only - nothing on the page should ask for a
      lighter or heavier weight or the browser will synthesise one. */
   --font-sans: "Sora", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
     Roboto, sans-serif;
@@ -23,7 +23,7 @@
     monospace;
 
   /*
-   * Zinc — A highly premium, professional grayscale palette to replace the 
+   * Zinc - A highly premium, professional grayscale palette to replace the 
    * glowing purple AI aesthetic.
    */
   --color-brand-50: #fafafa;
@@ -45,7 +45,7 @@
   --color-azure-500: #71717a;
   --color-azure-600: #52525b;
 
-  /* Ink — near-blacks with a whisper of violet, no warm cast */
+  /* Ink - near-blacks with a whisper of violet, no warm cast */
   --color-ink-950: #050509;
   --color-ink-900: #08070d;
   --color-ink-850: #0b0a12;
@@ -54,7 +54,7 @@
   --color-ink-600: #221f2c;
   --color-ink-500: #2f2b3b;
 
-  /* Confirmation teal — cool enough to sit beside the violet */
+  /* Confirmation teal - cool enough to sit beside the violet */
   --color-mint-400: #7fd8c0;
   --color-mint-500: #3fa88c;
 
@@ -152,7 +152,7 @@
 }
 
 /*
- * The email field paints no glyphs of its own — an overlay renders each
+ * The email field paints no glyphs of its own - an overlay renders each
  * character so a freshly typed one can animate in. Everything below hides
  * the native text while keeping the real caret, placeholder and selection.
  */
@@ -275,7 +275,7 @@
    UTILITIES
    ═══════════════════════════════════════════════════════════════════ */
 
-/* Frosted panel — the base surface for every card, pill and window */
+/* Frosted panel - the base surface for every card, pill and window */
 @utility glass {
   background: linear-gradient(
     180deg,
@@ -298,7 +298,7 @@
   -webkit-backdrop-filter: blur(20px) saturate(150%);
 }
 
-/* 1px inner top highlight — reads as a bevel catching light */
+/* 1px inner top highlight - reads as a bevel catching light */
 @utility bevel {
   box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.08);
 }
@@ -391,7 +391,7 @@
   );
 }
 
-/* Film grain — breaks up the banding in the big background gradients */
+/* Film grain - breaks up the banding in the big background gradients */
 @utility noise {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
@@ -469,7 +469,7 @@
    * Animated focus border for the email field.
    *
    * Same conic trick as `.spin-border`, but two-toned and only lit while the
-   * field has focus — `opacity` is on the pseudo-element so the gradient keeps
+   * field has focus - `opacity` is on the pseudo-element so the gradient keeps
    * rotating underneath and never snaps back to 0deg when focus returns.
    */
   .field-spin {
@@ -493,7 +493,7 @@
       transparent 360deg
     );
     /* Mask to a 1px ring so only the border lights, not the whole pill.
-       Longhands, not the `mask:` shorthand — Safari's `-webkit-mask`
+       Longhands, not the `mask:` shorthand - Safari's `-webkit-mask`
        shorthand silently drops the compositing keyword. */
     mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
     mask-clip: content-box, border-box;

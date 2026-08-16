@@ -32,7 +32,7 @@ const HEX = Array.from({ length: 256 }, (_, i) =>
 
 const encoder = new TextEncoder();
 
-// Reused across every call in the search loop — allocating a fresh schedule
+// Reused across every call in the search loop - allocating a fresh schedule
 // per hash is most of the cost of a naive implementation.
 const w = new Uint32Array(64);
 
@@ -119,7 +119,7 @@ export function sha256Hex(message: string): string {
   return out;
 }
 
-/** Hashes attempted between yields — small enough to never drop a frame. */
+/** Hashes attempted between yields - small enough to never drop a frame. */
 const CHUNK = 3000;
 
 /**

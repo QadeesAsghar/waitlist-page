@@ -35,7 +35,7 @@ interface MagneticButtonProps extends NativeButtonProps {
  * `whileTap` rather than a Tailwind `active:scale-*` class, which would be
  * silently overwritten by the inline transform framer already owns.
  *
- * Disabled on coarse pointers — there is no cursor to chase, and the offset
+ * Disabled on coarse pointers - there is no cursor to chase, and the offset
  * would just make the tap target drift under a thumb.
  */
 export function MagneticButton({

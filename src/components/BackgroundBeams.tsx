@@ -2,7 +2,7 @@
  * Ambient violet/blue aurora wash behind the page.
  *
  * Soft edges come from radial-gradient falloff rather than `filter: blur()`
- * — a blurred element that also animates forces a full re-rasterise every
+ * - a blurred element that also animates forces a full re-rasterise every
  * frame, which is what made the old version stutter on mobile.
  */
 export function BackgroundBeams() {
@@ -17,7 +17,7 @@ export function BackgroundBeams() {
         }}
       />
 
-      {/* Flanking washes — hidden on phones, where they only cost paint */}
+      {/* Flanking washes - hidden on phones, where they only cost paint */}
       <div
         className="absolute top-[18%] -left-64 hidden h-[34rem] w-[34rem] animate-aurora rounded-full [animation-delay:-9s] md:block"
         style={{

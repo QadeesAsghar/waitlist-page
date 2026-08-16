@@ -69,7 +69,7 @@ if (existsSync(join(DIST, "index.html")) && process.env.SERVE_STATIC !== "false"
     // Tailwind's generated sheet plus the inline gradients in <Background />
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
-    "img-src 'self' data:",
+    "img-src 'self' data: https://api.dicebear.com",
     "connect-src 'self'",
     "base-uri 'self'",
     "form-action 'self'",

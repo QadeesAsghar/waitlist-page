@@ -3,7 +3,7 @@ import { useReducedMotion } from "framer-motion";
 import { cn } from "../lib/utils";
 
 interface TypewriterProps {
-  /** Pass a stable, module-level array — see the `key` note below. */
+  /** Pass a stable, module-level array - see the `key` note below. */
   phrases: string[];
   typeSpeed?: number;
   deleteSpeed?: number;
@@ -33,7 +33,7 @@ export function Typewriter({
   const [finished, setFinished] = useState(false);
 
   // The longest phrase reserves the box, so neighbouring text never reflows
-  // as characters land — only the typed word itself changes width.
+  // as characters land - only the typed word itself changes width.
   const longest = useMemo(
     () => phrases.reduce((a, b) => (b.length >= a.length ? b : a), ""),
     [phrases]

@@ -26,7 +26,7 @@ export function Background() {
         }}
       />
 
-      {/* Same two blooms again, but drifting — the wash is never quite still */}
+      {/* Same two blooms again, but drifting - the wash is never quite still */}
       <div
         className="absolute inset-0 animate-drift"
         style={{
@@ -46,7 +46,7 @@ export function Background() {
       {/*
         Glass pane over the sky. Specular sheen rather than `backdrop-filter`
         on purpose: a fullscreen blur would re-rasterise every frame behind
-        the twinkling stars, and it would smear the stars themselves — glass
+        the twinkling stars, and it would smear the stars themselves - glass
         reads through reflection and a lit edge anyway, not through blur.
       */}
       <div
@@ -56,7 +56,7 @@ export function Background() {
             "linear-gradient(147deg, rgb(255 255 255 / 0.055) 0%, rgb(255 255 255 / 0.015) 24%, transparent 44%, transparent 61%, rgb(255 255 255 / 0.02) 83%, rgb(255 255 255 / 0.045) 100%)",
         }}
       />
-      {/* Lit top edge — the tell that there's a pane in front of the sky */}
+      {/* Lit top edge - the tell that there's a pane in front of the sky */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-300/25 to-transparent" />
 
       {/* Vignette pulls focus to the centre column */}

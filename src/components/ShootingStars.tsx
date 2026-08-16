@@ -17,9 +17,9 @@ interface ShootingStarsProps {
   maxSpeed?: number;
   minDelay?: number;
   maxDelay?: number;
-  /** Hex, `#rgb` or `#rrggbb` — the bright head of the streak */
+  /** Hex, `#rgb` or `#rrggbb` - the bright head of the streak */
   starColor?: string;
-  /** Hex — fades to fully transparent along the tail */
+  /** Hex - fades to fully transparent along the tail */
   trailColor?: string;
   trailLength?: number;
   thickness?: number;
@@ -46,7 +46,7 @@ const hexToRgb = (hex: string) => {
 /**
  * Occasional shooting stars on a canvas.
  *
- * Deliberately infrequent — a constant stream of streaks is what made the
+ * Deliberately infrequent - a constant stream of streaks is what made the
  * earlier meteor layer look cheap. Two or three a minute reads as weather.
  *
  * Position lives in a ref rather than React state: driving this from state

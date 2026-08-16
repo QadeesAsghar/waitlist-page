@@ -23,7 +23,7 @@ interface StarfieldProps {
 /**
  * Twinkling star field.
  *
- * Stars hold position and only vary in brightness — the previous version
+ * Stars hold position and only vary in brightness - the previous version
  * drifted every particle down the screen, which read as falling snow rather
  * than a sky.
  *
@@ -124,7 +124,7 @@ export function Starfield({
       else start();
     };
 
-    // Debounce resize — mobile browsers fire it continuously as the URL bar slides
+    // Debounce resize - mobile browsers fire it continuously as the URL bar slides
     let resizeTimer: number;
     const onResize = () => {
       window.clearTimeout(resizeTimer);

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { Resend } from "resend";
 import { getWaitlist } from "../lib/db.js";
 import {
   CONFIG,
@@ -11,6 +12,8 @@ import {
   verifyPow,
   verifyToken,
 } from "../lib/security.js";
+
+const resendClient = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 /*
  * Layered so that each cheap check runs before an expensive one: origin,
@@ -193,13 +196,13 @@ waitlistRouter.post("/", async (req, res) => {
     });
 
     // Send Welcome Email via Resend
-    if (process.env.RESEND_API_KEY) {
-      import("resend").then(({ Resend }) => {
-        const resend = new Resend(process.env.RESEND_API_KEY);
-        resend.emails.send({
-          from: "Slang <hello@updates.slang.com>",
+    if (resendClient) {
+      const fromEmail = process.env.RESEND_FROM || "Slang <onboarding@resend.dev>";
+      resendClient.emails
+        .send({
+          from: fromEmail,
           to: parsed.email,
-          subject: "You're on the list.",
+          subject: "You're on the list - Welcome to Slang",
           html: `
             <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #18181b;">
               <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 24px; color: #09090b;">Welcome to the waitlist.</h2>
@@ -216,8 +219,15 @@ waitlistRouter.post("/", async (req, res) => {
               </div>
             </div>
           `,
-        }).catch(err => console.error("[resend] failed to send welcome email:", err));
-      });
+        })
+        .then((result) => {
+          if (result.error) {
+            console.error("[resend] email delivery error:", result.error);
+          } else {
+            console.log("[resend] welcome email queued/sent successfully:", result.data?.id);
+          }
+        })
+        .catch((err) => console.error("[resend] failed to send welcome email:", err));
     }
 
     ticket.burn();

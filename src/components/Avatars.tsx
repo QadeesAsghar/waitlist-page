@@ -1,5 +1,5 @@
 /*
- * Graduated violet graphite rather than one gradient per hue — five saturated
+ * Graduated violet graphite rather than one gradient per hue - five saturated
  * multi-colour circles is the thing that made the row look generated.
  */
 const PEOPLE = [

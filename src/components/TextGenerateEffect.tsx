@@ -13,7 +13,7 @@ interface TextGenerateEffectProps {
 /**
  * Word-by-word blur reveal.
  *
- * Unlike the previous version there is no mount gate — the text is always in
+ * Unlike the previous version there is no mount gate - the text is always in
  * the DOM (it's the page's LCP element and its h1), only its animation state
  * changes. Under reduced motion it renders instantly with no transform.
  */

@@ -63,6 +63,13 @@ export function WaitlistForm({ className }: { className?: string }) {
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const radialGlow = useMotionTemplate`
+    radial-gradient(
+      250px circle at ${mouseX}px ${mouseY}px,
+      rgba(255, 255, 255, 0.15),
+      transparent 80%
+    )
+  `;
 
   function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
     const { left, top } = currentTarget.getBoundingClientRect();
@@ -226,13 +233,7 @@ export function WaitlistForm({ className }: { className?: string }) {
               <motion.div
                 className="pointer-events-none absolute -inset-px rounded-xl sm:rounded-full opacity-0 transition duration-300 group-hover:opacity-100"
                 style={{
-                  background: useMotionTemplate`
-                    radial-gradient(
-                      250px circle at ${mouseX}px ${mouseY}px,
-                      rgba(255, 255, 255, 0.15),
-                      transparent 80%
-                    )
-                  `,
+                  background: radialGlow,
                 }}
               />
               <label htmlFor="waitlist-email" className="sr-only">
@@ -316,7 +317,7 @@ export function WaitlistForm({ className }: { className?: string }) {
                   </div>
                 )}
 
-                {/* Underline charge — width tracks how hard you're typing */}
+                {/* Underline charge - width tracks how hard you're typing */}
                 {animateGlyphs && (
                   <motion.span
                     aria-hidden="true"
@@ -377,7 +378,7 @@ export function WaitlistForm({ className }: { className?: string }) {
               </MagneticButton>
             </div>
 
-            {/* Reserve nothing when empty — the row animates its own height */}
+            {/* Reserve nothing when empty - the row animates its own height */}
             <AnimatePresence>
               {error && (
                 <motion.p
