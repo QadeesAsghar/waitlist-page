@@ -73,7 +73,7 @@ export default async function handler(req, res) {
   if (!ticket.ok) {
     const message =
       ticket.reason === "too_fast"
-        ? "That was a little quick - try once more."
+        ? "That was a little quick. Please try once more."
         : "Your session expired. Reload the page and try again.";
     return res.status(400).json({ error: message, reason: ticket.reason });
   }

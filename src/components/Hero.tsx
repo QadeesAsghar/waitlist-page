@@ -34,7 +34,7 @@ export function Hero() {
                 <span className="relative h-2 w-2 rounded-full bg-brand-500" />
               </span>
               <span className="text-[10px] font-semibold tracking-[0.14em] text-brand-100 uppercase sm:text-[11px]">
-                Private beta - Q4 2026
+                Private Beta • Q4 2026
               </span>
             </span>
           </span>

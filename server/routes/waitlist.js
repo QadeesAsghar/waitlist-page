@@ -149,7 +149,7 @@ waitlistRouter.post("/", async (req, res) => {
     // an address and hit enter instantly can just try again.
     const message =
       ticket.reason === "too_fast"
-        ? "That was a little quick - try once more."
+        ? "That was a little quick. Please try once more."
         : "Your session expired. Reload the page and try again.";
     return reject(res, 400, message, { reason: ticket.reason });
   }

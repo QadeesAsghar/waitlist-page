@@ -22,7 +22,7 @@ type NativeButtonProps = Omit<
 
 interface MagneticButtonProps extends NativeButtonProps {
   children: ReactNode;
-  /** How far the button leans toward the cursor, 0–1 */
+  /** How far the button leans toward the cursor, 0 to 1 */
   strength?: number;
   className?: string;
 }
@@ -35,7 +35,7 @@ interface MagneticButtonProps extends NativeButtonProps {
  * `whileTap` rather than a Tailwind `active:scale-*` class, which would be
  * silently overwritten by the inline transform framer already owns.
  *
- * Disabled on coarse pointers - there is no cursor to chase, and the offset
+ * Disabled on coarse pointers because there is no cursor to chase, and the offset
  * would just make the tap target drift under a thumb.
  */
 export function MagneticButton({
