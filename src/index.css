@@ -1,0 +1,556 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════════════
+   DESIGN TOKENS
+   ═══════════════════════════════════════════════════════════════════ */
+
+/*
+ * Raw hues for the big background washes. Kept outside `@theme` so they stay
+ * plain custom properties usable inside `color-mix()` in inline styles, which
+ * is how the atmosphere layers in <Background /> are authored.
+ */
+:root {
+  --violet: #3f3f46; /* zinc-700 */
+  --blue: #18181b;   /* zinc-900 */
+}
+
+@theme {
+  /* Sora ships 400/500/600/700 only — nothing on the page should ask for a
+     lighter or heavier weight or the browser will synthesise one. */
+  --font-sans: "Sora", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    monospace;
+
+  /*
+   * Zinc — A highly premium, professional grayscale palette to replace the 
+   * glowing purple AI aesthetic.
+   */
+  --color-brand-50: #fafafa;
+  --color-brand-100: #f4f4f5;
+  --color-brand-200: #e4e4e7;
+  --color-brand-300: #d4d4d8;
+  --color-brand-400: #a1a1aa;
+  --color-brand-500: #71717a;
+  --color-brand-600: #52525b;
+  --color-brand-700: #3f3f46;
+  --color-brand-800: #27272a;
+  --color-brand-900: #18181b;
+  --color-brand-950: #09090b;
+
+  /* Secondary neutral wash */
+  --color-azure-200: #e4e4e7;
+  --color-azure-300: #d4d4d8;
+  --color-azure-400: #a1a1aa;
+  --color-azure-500: #71717a;
+  --color-azure-600: #52525b;
+
+  /* Ink — near-blacks with a whisper of violet, no warm cast */
+  --color-ink-950: #050509;
+  --color-ink-900: #08070d;
+  --color-ink-850: #0b0a12;
+  --color-ink-800: #100e18;
+  --color-ink-700: #17151f;
+  --color-ink-600: #221f2c;
+  --color-ink-500: #2f2b3b;
+
+  /* Confirmation teal — cool enough to sit beside the violet */
+  --color-mint-400: #7fd8c0;
+  --color-mint-500: #3fa88c;
+
+  --radius-4xl: 1.75rem;
+  --radius-5xl: 2.25rem;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+
+  --shadow-glow-sm: 0 0 30px -10px var(--color-brand-500);
+  --shadow-glow: 0 0 90px -25px var(--color-brand-500);
+  --shadow-lift: 0 30px 70px -25px rgb(0 0 0 / 0.8),
+    0 10px 24px -14px rgb(0 0 0 / 0.7);
+
+  --animate-aurora: aurora 24s ease-in-out infinite alternate;
+  --animate-drift: drift 38s ease-in-out infinite alternate;
+  --animate-pulse-ring: pulse-ring 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-caret: caret 1.05s steps(1) infinite;
+  --animate-field-ripple: field-ripple 0.7s var(--ease-out-expo) forwards;
+}
+
+@keyframes aurora {
+  0% {
+    transform: translate3d(-6%, -3%, 0) scale(1);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translate3d(5%, 4%, 0) scale(1.14);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate3d(4%, -5%, 0) scale(1.05);
+    opacity: 0.5;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(200%);
+  }
+}
+
+/*
+ * Very slow parallax for the violet/blue wash. Deliberately a different
+ * period from `aurora` so the two atmosphere layers never sync up into one
+ * obvious pulse.
+ */
+@keyframes drift {
+  0% {
+    transform: translate3d(-2.5%, -1.5%, 0) scale(1.06);
+  }
+  50% {
+    transform: translate3d(2%, 2.5%, 0) scale(1.14);
+  }
+  100% {
+    transform: translate3d(3%, -2%, 0) scale(1.08);
+  }
+}
+
+/* One-shot ring that leaves the field outward the moment it takes focus */
+@keyframes field-ripple {
+  from {
+    transform: scale(0.94);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(1.06);
+    opacity: 0;
+  }
+}
+
+@keyframes orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+  70%,
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+/*
+ * The email field paints no glyphs of its own — an overlay renders each
+ * character so a freshly typed one can animate in. Everything below hides
+ * the native text while keeping the real caret, placeholder and selection.
+ */
+.typed-input,
+.typed-input:-webkit-autofill,
+.typed-input:-webkit-autofill:hover,
+.typed-input:-webkit-autofill:focus {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  caret-color: #fff;
+}
+
+.typed-input::placeholder {
+  color: rgb(255 255 255 / 0.32);
+  -webkit-text-fill-color: rgb(255 255 255 / 0.32);
+}
+
+/* Without this the global ::selection colour would repaint the hidden glyphs */
+.typed-input::selection {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background: color-mix(in oklab, var(--color-brand-400) 35%, transparent);
+}
+
+/*
+ * The caret is the typed element's own right border, not a child span.
+ * A child element with a background gets clipped away by `background-clip:
+ * text` on the gradient headline; a border is painted normally.
+ */
+@keyframes caret {
+  0%,
+  45% {
+    border-color: var(--color-brand-300);
+  }
+  55%,
+  100% {
+    border-color: transparent;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   BASE
+   ═══════════════════════════════════════════════════════════════════ */
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--color-ink-900);
+    color: rgb(255 255 255 / 0.92);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* `clip` not `hidden`: overflow:hidden on an ancestor kills position:sticky */
+    overflow-x: clip;
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-brand-500) 45%, transparent);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-400);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  /* Only show the ring for keyboard users, never on mouse-down */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-ink-950);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-600);
+    border: 2px solid var(--color-ink-950);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-500);
+  }
+
+  /* Kill Chrome's yellow autofill wash inside the glass form */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #fff;
+    -webkit-box-shadow: 0 0 0 1000px var(--color-ink-800) inset;
+    caret-color: #fff;
+    transition: background-color 9999s ease-in-out 0s;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   UTILITIES
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Frosted panel — the base surface for every card, pill and window */
+@utility glass {
+  background: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 0.055) 0%,
+    rgb(255 255 255 / 0.022) 100%
+  );
+  border: 1px solid rgb(255 255 255 / 0.09);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+
+@utility glass-strong {
+  background: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 0.08) 0%,
+    rgb(255 255 255 / 0.03) 100%
+  );
+  border: 1px solid rgb(255 255 255 / 0.12);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+}
+
+/* 1px inner top highlight — reads as a bevel catching light */
+@utility bevel {
+  box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.08);
+}
+
+@utility text-gradient {
+  background: linear-gradient(
+    135deg,
+    #ffffff 6%,
+    var(--color-brand-200) 44%,
+    var(--color-azure-300) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  /* descenders get clipped by background-clip without a little breathing room */
+  padding-bottom: 0.08em;
+}
+
+@utility text-muted {
+  color: rgb(255 255 255 / 0.56);
+}
+
+@utility text-faint {
+  color: rgb(255 255 255 / 0.38);
+}
+
+@utility bg-grid {
+  background-image: linear-gradient(
+      to right,
+      rgb(255 255 255 / 0.04) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+@utility bg-dots {
+  background-image: radial-gradient(
+    rgb(255 255 255 / 0.09) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
+}
+
+@utility mask-fade-y {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+}
+
+@utility mask-fade-x {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+}
+
+@utility mask-radial-top {
+  mask-image: radial-gradient(
+    ellipse 75% 60% at 50% 0%,
+    #000 35%,
+    transparent 78%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 75% 60% at 50% 0%,
+    #000 35%,
+    transparent 78%
+  );
+}
+
+/* Film grain — breaks up the banding in the big background gradients */
+@utility noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Sprite icons in /icons.svg ship with a hard #08060d fill that no
+   cascade can reach through <use>; flatten it to white instead. */
+@utility icon-invert {
+  filter: brightness(0) invert(1);
+}
+
+@utility container-page {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  @media (width >= 640px) {
+    padding-inline: 2rem;
+  }
+  @media (width >= 1024px) {
+    padding-inline: 2.5rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   COMPONENTS
+   ═══════════════════════════════════════════════════════════════════ */
+
+@layer components {
+  /* Rotating conic border, used on the hero badge and the CTA card */
+  .spin-border {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .spin-border::before {
+    content: "";
+    position: absolute;
+    inset: -150%;
+    z-index: -1;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      var(--color-brand-400) 40deg,
+      transparent 110deg,
+      transparent 360deg
+    );
+    animation: orbit 5s linear infinite;
+  }
+
+  /* Sweeping specular highlight across primary buttons */
+  .sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(
+      100deg,
+      transparent 25%,
+      rgb(255 255 255 / 0.45) 50%,
+      transparent 75%
+    );
+    transform: translateX(-100%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .sheen:hover::after {
+    opacity: 1;
+    animation: shimmer 1.1s ease-out;
+  }
+
+  /*
+   * Animated focus border for the email field.
+   *
+   * Same conic trick as `.spin-border`, but two-toned and only lit while the
+   * field has focus — `opacity` is on the pseudo-element so the gradient keeps
+   * rotating underneath and never snaps back to 0deg when focus returns.
+   */
+  .field-spin {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .field-spin::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      var(--color-brand-400) 48deg,
+      var(--color-azure-400) 92deg,
+      transparent 150deg,
+      transparent 360deg
+    );
+    /* Mask to a 1px ring so only the border lights, not the whole pill.
+       Longhands, not the `mask:` shorthand — Safari's `-webkit-mask`
+       shorthand silently drops the compositing keyword. */
+    mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
+    mask-clip: content-box, border-box;
+    mask-composite: exclude;
+    -webkit-mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
+    -webkit-mask-clip: content-box, border-box;
+    -webkit-mask-composite: xor;
+    animation: orbit 6s linear infinite;
+    opacity: 0;
+    transition: opacity 0.45s var(--ease-out-quart);
+  }
+
+  .field-spin[data-focused="true"]::before {
+    opacity: 0.9;
+  }
+
+  /* Soft halo that breathes out from behind the field while it has focus */
+  .field-spin::after {
+    content: "";
+    position: absolute;
+    inset: -14px;
+    z-index: -2;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(
+      60% 120% at 50% 50%,
+      color-mix(in oklab, var(--violet) 30%, transparent),
+      transparent 72%
+    );
+    filter: blur(10px);
+    opacity: 0;
+    transform: scale(0.96);
+    transition: opacity 0.5s var(--ease-out-quart),
+      transform 0.5s var(--ease-out-quart);
+  }
+
+  .field-spin[data-focused="true"]::after {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOTION PREFERENCES
+   ═══════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
